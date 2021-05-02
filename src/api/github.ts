@@ -14,5 +14,7 @@ export const fetchIssues = (
 ): Promise<Issue[]> => {
   return fetch(
     `https://api.github.com/repos/${organization}/${repository}/issues?per_page=100&page=${page}&state=all`
-  ).then((res) => res.json());
+  )
+    .then((res) => res.json())
+    .catch((err) => Promise.reject<string>(err.message));
 };
