@@ -60,7 +60,7 @@ export const fetchIssues = createAsyncThunk<
 
     return issues;
   } catch (err) {
-    return rejectWithValue(err.message);
+    return rejectWithValue(err);
   }
 });
 

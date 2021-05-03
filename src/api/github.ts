@@ -15,6 +15,12 @@ export const fetchIssues = (
   return fetch(
     `https://api.github.com/repos/${organization}/${repository}/issues?per_page=100&page=${page}&state=all`
   )
-    .then((res) => res.json())
+    .then(async (res) => {
+      if (res.status >= 400) {
+        return Promise.reject(await res.json());
+      }
+
+      return res.json();
+    })
     .catch((err) => Promise.reject<string>(err.message));
 };
