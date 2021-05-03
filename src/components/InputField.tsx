@@ -19,13 +19,17 @@ const InputField: React.FC<InputFieldProps> = ({
   return (
     <Container>
       <Label htmlFor={id}>{label}</Label>
-      <Input
-        id={id}
-        onChange={(e) => onChange(e.currentTarget.value)}
-        type="text"
-        value={value}
-      />
-      {errorMessage && <ErrorMessage role="alert">{errorMessage}</ErrorMessage>}
+      <div>
+        <Input
+          id={id}
+          onChange={(e) => onChange(e.currentTarget.value)}
+          type="text"
+          value={value}
+        />
+        {errorMessage && (
+          <ErrorMessage role="alert">{errorMessage}</ErrorMessage>
+        )}
+      </div>
     </Container>
   );
 };
@@ -40,7 +44,8 @@ const Container = styled.div`
 
 const ErrorMessage = styled.span`
   color: red;
-  margin-bottom: 8px;
+  font-size: 10px;
+  position: absolute;
 `;
 
 const Input = styled.input`
@@ -51,13 +56,19 @@ const Input = styled.input`
   color: #495057;
   font-size: 16px;
   height: 28px;
-  margin: 6px 0;
+  margin: 6px 0 6px;
   outline: none;
   padding: 0;
   transition: border-bottom-color 300ms ease;
 
   &:focus {
     border-bottom-color: #ef4339;
+  }
+
+  div & {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
   }
 `;
 

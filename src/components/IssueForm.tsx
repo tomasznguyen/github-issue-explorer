@@ -59,7 +59,7 @@ const Button = styled.button`
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
   color: #fafafa;
   height: 32px;
-  margin: 16px 0;
+  margin: 20px 0 16px;
   padding: 8px 24px;
   text-transform: uppercase;
   transition: box-shadow 300ms ease;
