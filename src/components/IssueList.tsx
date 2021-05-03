@@ -17,7 +17,9 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
             {issue.state === "closed" && <ClosedIssueIcon />}
           </Icon>
           <Content>
-            <Title>{issue.title}</Title>
+            <Title href={issue.html_url} target="_blank">
+              {issue.title}
+            </Title>
             <Subtitle>
               #{issue.number} by {issue.user.login}
             </Subtitle>
@@ -71,10 +73,15 @@ const ListItem = styled.li`
   }
 `;
 
-const Title = styled.span`
+const Title = styled.a`
   color: #444;
   font-weight: bold;
-  margin-bottom: 2px;
+  margin-bottom: 5px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const Subtitle = styled.span`
