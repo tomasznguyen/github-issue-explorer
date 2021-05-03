@@ -85,6 +85,11 @@ const issuesSlice = createSlice({
   },
 });
 
+export const selectError = (state: RootState) => state.issues.error;
+export const selectIsIdle = (state: RootState) =>
+  state.issues.status === FetchingStatus.Idle;
+export const selectIsLoading = (state: RootState) =>
+  state.issues.status === FetchingStatus.Fetching;
 export const selectIssues = (state: RootState) => state.issues.items;
 
 export default issuesSlice.reducer;
