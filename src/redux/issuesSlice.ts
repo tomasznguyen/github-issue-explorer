@@ -71,11 +71,13 @@ const issuesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchIssues.pending, (state) => {
       state.status = FetchingStatus.Fetching;
+      state.error = null;
     });
 
     builder.addCase(fetchIssues.fulfilled, (state, action) => {
       state.status = FetchingStatus.Succeeded;
       state.items = action.payload;
+      state.error = null;
     });
 
     builder.addCase(fetchIssues.rejected, (state, action) => {
