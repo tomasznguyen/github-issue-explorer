@@ -12,10 +12,29 @@ const Pagination: React.FC<PaginationProps> = ({
   pages,
   onPageChange,
 }) => {
-  const paginationItems = React.useMemo(
-    () => Array.from({ length: pages }, (_, i) => i),
-    [pages]
-  );
+  const paginationItems = React.useMemo(() => {
+    if (pages <= 9) {
+      return Array.from({ length: pages }, (_, i) => i);
+    }
+
+    let result: (string | number)[] = [0, 1, 2];
+
+    if (page > 3) {
+      result.push("…");
+    }
+
+    if (page > 2 && page < pages - 3) {
+      result.push(page);
+    }
+
+    if (page < pages - 4) {
+      result.push("…");
+    }
+
+    result = [...result, pages - 3, pages - 2, pages - 1];
+
+    return result;
+  }, [page, pages]);
 
   return (
     <Navigation>
@@ -26,13 +45,17 @@ const Pagination: React.FC<PaginationProps> = ({
         >
           &lt;
         </ListItem>
-        {paginationItems.map((item) => (
+        {paginationItems.map((item, index) => (
           <ListItem
-            className={item === page ? "active" : ""}
-            key={item}
-            onClick={() => onPageChange(item)}
+            className={
+              item === page ? "active" : item === "…" ? "ellipsis" : ""
+            }
+            key={index}
+            onClick={
+              item !== "…" ? () => onPageChange(item as number) : undefined
+            }
           >
-            {item + 1}
+            {item !== "…" ? +item + 1 : item}
           </ListItem>
         ))}
         <ListItem
@@ -62,12 +85,14 @@ const ListBox = styled.ul`
 const ListItem = styled.li`
   align-items: center;
   border-radius: 16px;
+  box-sizing: border-box;
   cursor: pointer;
   display: inline-flex;
   height: 32px;
   justify-content: center;
   margin: 0 3px;
   min-width: 32px;
+  padding: 0 8px;
   text-align: center;
 
   &.active {
@@ -80,7 +105,11 @@ const ListItem = styled.li`
     cursor: default;
   }
 
-  &:not(.active):not(.disabled):hover {
+  &.ellipsis {
+    cursor: default;
+  }
+
+  &:not(.active):not(.disabled):not(.ellipsis):hover {
     background-color: #eee;
   }
 `;
