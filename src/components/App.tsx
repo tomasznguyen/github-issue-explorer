@@ -2,33 +2,44 @@ import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { ReactComponent as Spinner } from "../assets/spinner.svg";
-import usePagination from "../hooks/usePagination";
 import {
   fetchIssues,
+  fetchRepositoryInformation,
   selectError,
   selectIsIdle,
   selectIsLoading,
-  selectIssues,
+  selectIssuesForPage,
+  selectPageCount,
 } from "../redux/issuesSlice";
-import { useAppDispatch } from "../redux/store";
+import { RootState, useAppDispatch } from "../redux/store";
 import GlobalStyle from "../theme/GlobalStyle";
 import IssueForm from "./IssueForm";
 import IssueList from "./IssueList";
 import Pagination from "./Pagination";
 
+const issuesPerPage = 25;
+
 export const App: React.FC = () => {
   const dispatch = useAppDispatch();
+  const [currentPage, setCurrentPage] = React.useState(0);
   const error = useSelector(selectError);
   const isIdle = useSelector(selectIsIdle);
   const isLoading = useSelector(selectIsLoading);
-  const issues = useSelector(selectIssues);
-  const { currentPage, pageItems, pageCount, setCurrentPage } = usePagination(
-    issues,
-    10
+  const issues = useSelector((state: RootState) =>
+    selectIssuesForPage(state, currentPage + 1)
   );
+  const pageCount = useSelector(selectPageCount);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    dispatch(fetchIssues({ page: page + 1 }));
+  };
 
   const handleSubmit = async (organization: string, repository: string) => {
-    dispatch(fetchIssues({ organization, repository }));
+    setCurrentPage(0);
+    dispatch(
+      fetchRepositoryInformation({ organization, repository, issuesPerPage })
+    );
   };
 
   return (
@@ -52,11 +63,11 @@ export const App: React.FC = () => {
 
       {!isIdle && !isLoading && error === null && (
         <>
-          <IssueList issues={pageItems} />
+          <IssueList issues={issues} />
           <Pagination
             page={currentPage}
             pages={pageCount}
-            onPageChange={setCurrentPage}
+            onPageChange={handlePageChange}
           />
         </>
       )}
